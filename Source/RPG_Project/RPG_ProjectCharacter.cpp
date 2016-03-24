@@ -3,15 +3,14 @@
 #include "RPG_Project.h"
 #include "RPG_ProjectCharacter.h"
 
-#define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::Cyan,text)
+#define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::Red,text)
 
 void ARPG_ProjectCharacter::BeginPlay()
 {
 	// Call the base class  
 	Super::BeginPlay();
 
-	// Store our initial location  
-	AnimationInstance = ReturnAnimInstance();
+	//AnimationInstance = ReturnAnimInstance();
 }
 
 ARPG_ProjectCharacter::ARPG_ProjectCharacter()
@@ -45,35 +44,45 @@ ARPG_ProjectCharacter::ARPG_ProjectCharacter()
 
 }
 
+/**
 UARPG_Character_AnimInstance *const ARPG_ProjectCharacter::ReturnAnimInstance()
 {
 	ARPG_ProjectCharacter *const Actor = Cast<ARPG_ProjectCharacter>(this);
 
 	UARPG_Character_AnimInstance *AnimInst = nullptr;
+	
+	//If we have our ARPG_Character
 	if (Actor) 
 	{
+		//Make Array of SkeletalMeshComponents and Iterate through until we reach our skeletalmeshComponent
 		TArray<USkeletalMeshComponent*> Components;
 		Actor->GetComponents<USkeletalMeshComponent>(Components);
 		for (int32 i = 0; i < Components.Num(); i++)
 		{
 			USkeletalMeshComponent* SkeletalMeshComponent = Components[i];
 			
-
-			FString logMsg = SkeletalMeshComponent->GetName();
-			print(logMsg);
+			//Debug FIXME
+			print("Debug: SkeletalMeshComponent: " + SkeletalMeshComponent->GetName());
 
 			AnimInst = Cast<UARPG_Character_AnimInstance>(SkeletalMeshComponent->GetAnimInstance());
 		}
 	}
 	return AnimInst;
 }
+*/
+
+//Handle Server replication Values
+void ARPG_ProjectCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	// Replicate to everyone
+	DOREPLIFETIME(ARPG_ProjectCharacter, bActiveCombat);
+}
 
 void ARPG_ProjectCharacter::SetCombatState(bool isActive)
 {
-	if (AnimationInstance)
-	{
-		AnimationInstance->bActiveCombat = isActive;
-	}
+	bActiveCombat = isActive;
 }
 
 

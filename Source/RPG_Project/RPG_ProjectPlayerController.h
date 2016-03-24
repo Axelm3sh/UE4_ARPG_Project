@@ -13,7 +13,7 @@ public:
 
 protected:
 	/** True if the controlled character should rotate to the mouse cursor. */
-	uint32 bRotateToMouseCursor : 1;
+	bool bRotateToMouseCursor;
 
 	// Begin PlayerController interface
 	virtual void PlayerTick(float DeltaTime) override;
@@ -41,6 +41,11 @@ protected:
 
 	/** Toggle Targeting Aim Mode*/
 	void ToggleTargetMode();
+
+	UFUNCTION(reliable, server, WithValidation)
+	void ServerToggleTargetMode();
+	virtual void ServerToggleTargetMode_Implementation();
+	virtual bool ServerToggleTargetMode_Validate();
 
 	/** Jump Method wrappers*/
 	void Action_StartJump();

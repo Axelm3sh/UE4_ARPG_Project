@@ -154,18 +154,39 @@ void ARPG_ProjectPlayerController::ToggleTargetMode()
 	bShowMouseCursor = !bShowMouseCursor;
 	bRotateToMouseCursor = !bRotateToMouseCursor;
 
-	
-	
-	FString printStr = "Toggle State: " + FString::FromInt(bShowMouseCursor);
-	print(printStr);
 
+	if (Role < ROLE_Authority) //Not the Server
+	{
+		FString printStr = "Toggle State Client: " + FString::FromInt(bShowMouseCursor);
+		print(printStr);
+		ServerToggleTargetMode();
+	}
+	else
+	{
+		FString printStr = "Toggle State Server: " + FString::FromInt(bShowMouseCursor);
+		print(printStr);
+
+		ARPG_ProjectCharacter *const Character = Cast<ARPG_ProjectCharacter>(GetCharacter());
+		if (Character)
+		{
+			Character->SetCombatState(bShowMouseCursor);
+		}
+	}
+
+}
+
+void ARPG_ProjectPlayerController::ServerToggleTargetMode_Implementation()
+{
 	ARPG_ProjectCharacter *const Character = Cast<ARPG_ProjectCharacter>(GetCharacter());
 	if (Character)
 	{
 		Character->SetCombatState(bShowMouseCursor);
 	}
+}
 
-	
+bool ARPG_ProjectPlayerController::ServerToggleTargetMode_Validate()
+{
+	return true;
 }
 
 void ARPG_ProjectPlayerController::Action_StartJump()
