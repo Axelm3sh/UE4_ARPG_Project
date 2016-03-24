@@ -1,0 +1,36 @@
+// Copyright 1998-2015 Epic Games, Inc. All Rights Reserved.
+#pragma once
+#include "GameFramework/Character.h"
+#include "ARPG_Character_AnimInstance.h"
+#include "RPG_ProjectCharacter.generated.h"
+
+UCLASS(Blueprintable)
+class ARPG_ProjectCharacter : public ACharacter
+{
+	GENERATED_BODY()
+
+	/** Top down camera */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	class UCameraComponent* TopDownCameraComponent;
+
+	/** Camera boom positioning the camera above the character */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	class USpringArmComponent* CameraBoom;
+
+	/** Custom AnimationInstance to access player state variables for animation control*/
+	class UARPG_Character_AnimInstance* AnimationInstance;
+
+	virtual void BeginPlay();
+
+public:
+	ARPG_ProjectCharacter();
+
+	/** Returns TopDownCameraComponent subobject **/
+	FORCEINLINE class UCameraComponent* GetTopDownCameraComponent() const { return TopDownCameraComponent; }
+	/** Returns CameraBoom subobject **/
+	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
+
+	UARPG_Character_AnimInstance* const ReturnAnimInstance();
+	void SetCombatState(bool isActive);
+};
+
